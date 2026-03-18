@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Test</title>
+</head>
+<body>
+    <h1>Backend Test Page</h1>
+    <button onclick="testBackend()">Test Backend Connection</button>
+    <pre id="output"></pre>
+
+    <script>
+        function testBackend() {
+            document.getElementById('output').innerText = 'Sending request...';
+            
+            fetch('http://localhost:5000/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    language: 'python',
+                    code: 'print("hello")',
+                    input: ''
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('output').innerText = 'Error: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>

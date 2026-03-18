@@ -1,0 +1,83 @@
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.title {
+  text-align: center;
+  color: #007acc;
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.controls {
+  margin-bottom: 15px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #007acc;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  background: #005fa3;
+}
+
+.inputBox {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: monospace;
+}
+
+.runBtn {
+  margin-top: 15px;
+  padding: 12px 24px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.runBtn:hover {
+  background: #005fa3;
+}
+
+.output {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: monospace;
+}
+
+.statusBar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  font-size: 14px;
+}

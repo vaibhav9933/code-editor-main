@@ -1,15 +1,32 @@
-var http = require('http');
-var fs = require('fs');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { exec } = require("child_process");
 
-const PORT=8080;
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
 
-fs.readFile('./index.html', function (err, html) {
+app.post("/execute", (req, res) => {
+  const { language, code, input } = req.body;
 
-    if (err) throw err;
+  if (language === "python") {
+    exec(`python -c "${code}"`, (error, stdout, stderr) => {
+      res.json({
+        output: stdout || "",
+        errors: stderr || (error ? error.message : "")
+      });
+    });
+  } else if (language === "javascript") {
+    exec(`node -e "${code}"`, (error, stdout, stderr) => {
+      res.json({
+        output: stdout || "",
+        errors: stderr || (error ? error.message : "")
+      });
+    });
+  } else {
+    res.json({ output: "", errors: "Language not supported yet" });
+  }
+});
 
-    http.createServer(function(request, response) {
-        response.writeHeader(200, {"Content-Type": "text/html"});
-        response.write(html);
-        response.end();
-    }).listen(PORT);
-})
+app.listen(5000, () => console.log("Backend running on port 5000"));

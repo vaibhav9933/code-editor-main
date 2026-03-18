@@ -9,12 +9,20 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/ajaxorg/ace-builds.git"
+        "url": "git+https://github.com/ajaxorg/ace-builds.git"
     },
     "author": "",
     "license": "BSD-3-Clause",
     "bugs": {
         "url": "https://github.com/ajaxorg/ace-builds/issues"
     },
-    "homepage": "https://github.com/ajaxorg/ace-builds"
+    "homepage": "https://github.com/ajaxorg/ace-builds",
+    "keywords": [],
+    "type": "commonjs",
+    "dependencies": {
+        "@monaco-editor/react": "^4.7.0",
+        "body-parser": "^2.2.2",
+        "cors": "^2.8.6",
+        "express": "^5.2.1"
+    }
 }

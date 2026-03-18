@@ -1,63 +1,73 @@
 const JAVA_KEY = "62";
 const CPP_KEY = "53";
 const PYTHON_KEY = "70";
-const BASE_URL = "http://34.72.83.62/submissions";
+const BASE_URL = "http://localhost:5000";
 
+let currentLanguageId = PYTHON_KEY;
+let editor;
 
 function codeEditor(lang_id) {
-  var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/twilight");
+  if (!editor) {
+    editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+  }
 
-  console.log("id" + lang_id )
-  $(document).ready(function () {
-    $("button").click(function () {
-      let code = editor.getValue();
-      $("#ans").html("Loading...");
-      console.log(code);
-      let data = {
-        source_code: code,
-        language_id: lang_id,
-        number_of_runs: "1",
-        stdin: "Judge0",
-        expected_output: null,
-        cpu_time_limit: "2",
-        cpu_extra_time: "0.5",
-        wall_time_limit: "5",
-        memory_limit: "128000",
-        stack_limit: "64000",
-        max_processes_and_or_threads: "60",
-        enable_per_process_and_thread_time_limit: false,
-        enable_per_process_and_thread_memory_limit: false,
-        max_file_size: "1024",
-      };
-      console.log(data)
-      let request = $.ajax({
-        url: BASE_URL,
-        type: "post",
-        data: data,
-      });
-
-      const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-      // Callback handler that will be called on success
-      request.done(async function (response, textStatus, jqXHR) {
-        // Log a message to the console
-        console.log("Hooray, it worked!");
-        let token = response.token;
-        await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 sec
-        console.log(3, "after 3 seconds");
-        let second_request = $.ajax({
-          url: BASE_URL + "/"+ token,
-          type: "get",
-        });
-        second_request.done(function (response) {
-          console.log(response.stdout);
-          $("#ans").html(response.stdout);
-        });
-      });
+  currentLanguageId = lang_id;
+  console.log("Language changed to: " + lang_id);
+  
+  // Remove old click handlers first
+  $("button").off('click');
+  
+  // Set up new button click handler
+  $("button").on("click", function (e) {
+    e.preventDefault();
+    console.log("✅ Execute button clicked!");
+    
+    let code = editor.getValue();
+    console.log("Code to execute:", code);
+    
+    let language = "";
+    if (currentLanguageId == PYTHON_KEY) language = "python";
+    else if (currentLanguageId == JAVA_KEY) language = "javascript";
+    else if (currentLanguageId == CPP_KEY) language = "javascript";
+    
+    console.log("Selected language:", language);
+    
+    let data = {
+      language: language,
+      code: code,
+      input: ""
+    };
+    
+    console.log("🚀 Sending request to:", BASE_URL + "/execute");
+    console.log("📦 Request data:", data);
+    
+    $("#ans").html("Loading...");
+    
+    $.ajax({
+      url: BASE_URL + "/execute",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      success: function(response) {
+        console.log("✅ Success! Response:", response);
+        let output = response.output || response.errors || "No output";
+        $("#ans").html(output);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error("❌ Error:", textStatus, errorThrown);
+        console.error("Response text:", jqXHR.responseText);
+        console.error("Status code:", jqXHR.status);
+        $("#ans").html("Error: " + textStatus + " - " + errorThrown);
+      }
     });
   });
+  
+  console.log("✅ Button click handler registered");
+  
+  // Set default code for selected language
   if(lang_id==PYTHON_KEY)
-      editor.setValue("def execute(): \n\t for i in range(10):\n\t\t print i \nexecute()")
+      editor.setValue("def execute(): \n\t for i in range(10):\n\t\t print(i) \nexecute()")
   //java
   if(lang_id==JAVA_KEY){
 
